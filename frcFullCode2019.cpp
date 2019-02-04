@@ -13,9 +13,10 @@
 class Robot : public frc::TimedRobot 
 {
  public:
-  void TeleopPeriodic() override 
+ 
+  void RobotInit()override
   {
-    //camera code may need fixing
+    //camera code may need fixing, go into robot init
     #if defined(__linux__)
       cs::UsbCamera videoBoi = frc::CameraServer::GetInstance()->StartAutomaticCapture();
       videoBoi.SetResolution(720, 1280);
@@ -25,6 +26,11 @@ class Robot : public frc::TimedRobot
       wpi::errs().flush();
     #endif
 
+  }
+
+  void TeleopPeriodic()
+  {
+    
     //lifts rear wheels with xbox
     bool leftBumper;
     leftBumper = xbox.GetRawButton(5);
@@ -113,9 +119,7 @@ class Robot : public frc::TimedRobot
     clawMotor.Set(0);
   }
 
-  //use if analog movement is needed
-  //leftWheelMotor.Set(joystick.GetY());
-  //rightWheelMotor.Set(joystick.GetY());
+
 
   //moves the robot forward with push forward of joystick
   if(joystickYAxis>.5)
@@ -173,23 +177,24 @@ if(joystickRotateZAxis<75)
  private:
   frc::Joystick joystick{0};
   frc::XboxController xbox{1};
-  //Motor numbers and brand will need to change
-  //these may not be correct but they should be
-  //lifting motors not attatched yet
+  
+  //lifting and servo motors not attatched yet
   frc::Spark rearWheelsMotor{6};
   frc::Spark frontWheelsMotor{7};
+  frc::Servo servo{5};
+  
+  //these may not be correct but they should be
   frc::Spark upAndDownArmMotor{3};
   frc::Spark upAndDownWristMotor{2};
   frc::Spark clawMotor{4};
   frc::Spark leftWheelMotor{0};
   frc::Spark rightWheelMotor{1};
-  //servo will be on 5
-  frc::Servo servo{5};
 };
 
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif
+
 
 //begin the invoking of shag
 
