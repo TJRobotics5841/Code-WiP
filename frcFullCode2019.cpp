@@ -113,7 +113,9 @@ class Robot : public frc::TimedRobot
     clawMotor.Set(0);
   }
 
-
+  //use if analog movement is needed
+  //leftWheelMotor.Set(joystick.GetY());
+  //rightWheelMotor.Set(joystick.GetY());
 
   //moves the robot forward with push forward of joystick
   if(joystickYAxis>.5)
