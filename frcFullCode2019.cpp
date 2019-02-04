@@ -172,14 +172,17 @@ if(joystickRotateZAxis<75)
   frc::Joystick joystick{0};
   frc::XboxController xbox{1};
   //Motor numbers and brand will need to change
-  frc::Spark rearWheelsMotor{0};
-  frc::Spark frontWheelsMotor{1};
+  //these may not be correct but they should be
+  //lifting motors not attatched yet
+  frc::Spark rearWheelsMotor{6};
+  frc::Spark frontWheelsMotor{7};
   frc::Spark upAndDownArmMotor{3};
-  frc::Spark upAndDownWristMotor{4};
-  frc::Spark clawMotor{5};
-  frc::Spark leftWheelMotor{6};
-  frc::Spark rightWheelMotor{7};
-  frc::Servo servo{8};
+  frc::Spark upAndDownWristMotor{2};
+  frc::Spark clawMotor{4};
+  frc::Spark leftWheelMotor{0};
+  frc::Spark rightWheelMotor{1};
+  //servo will be on 5
+  frc::Servo servo{5};
 };
 
 #ifndef RUNNING_FRC_TESTS
