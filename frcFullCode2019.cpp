@@ -186,12 +186,15 @@ if(joystickRotateZAxis<75)
 int main() { return frc::StartRobot<Robot>(); }
 #endif
 
+//begin the invoking of shag
+
 /*
 
                 This code invokes the universal power of the godlike being
                 that is Shaggy Rogers. We insert his likeness for his blessing of
-                a robot that fuctions at a higher level than any other. God speed,
-                Shaggy.
+                a robot that fuctions at a higher level than any other. Course though the copper 
+                vessels that line the aluminum frame and distribute your legendary
+                energy. God speed, Shaggy.
                                                                        
                                                                        
                                   '##'                                 
