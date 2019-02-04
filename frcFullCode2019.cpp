@@ -120,7 +120,8 @@ class Robot : public frc::TimedRobot
   }
 
 
-
+  //joystick controls could be wrong
+  //might change to analog, might need to change the direction, speed
   //moves the robot forward with push forward of joystick
   if(joystickYAxis>.5)
   {
@@ -187,6 +188,8 @@ if(joystickRotateZAxis<75)
   frc::Spark upAndDownArmMotor{3};
   frc::Spark upAndDownWristMotor{2};
   frc::Spark clawMotor{4};
+  
+  //drive motor may be switched
   frc::Spark leftWheelMotor{0};
   frc::Spark rightWheelMotor{1};
 };
