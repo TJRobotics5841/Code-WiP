@@ -1,3 +1,6 @@
+//Megan Bell
+//xbox controller to control functions of robot
+
 #include <frc/XboxController.h>
 #include <frc/Spark.h>
 #include <frc/TimedRobot.h>
@@ -73,10 +76,9 @@ class Robot : public frc::TimedRobot
   else
   {
     clawMotor.Set(0);
-
-  }
   }
 
+  }
 
  private:
   frc::XboxController xbox{0};
@@ -86,7 +88,6 @@ class Robot : public frc::TimedRobot
   frc::Spark upAndDownArmMotor{3};
   frc::Spark upAndDownWristMotor{4};
   frc::Spark clawMotor{5};
-
 };
 
 #ifndef RUNNING_FRC_TESTS
