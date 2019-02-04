@@ -1,4 +1,5 @@
 //Megan Bell
+//Gabe Najera
 //xbox controller to control functions of robot, joystick controller to control movement of robot
 
 #include <frc/XboxController.h>
@@ -187,7 +188,10 @@ int main() { return frc::StartRobot<Robot>(); }
 
 /*
 
-                                                          
+                This code invokes the universal power of the godlike being
+                that is Shaggy Rogers. We insert his likeness for his blessing of
+                a robot that fuctions at a higher level than any other. God speed,
+                Shaggy.
                                                                        
                                                                        
                                   '##'                                 
