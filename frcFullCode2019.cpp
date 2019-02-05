@@ -77,6 +77,9 @@ class Robot : public frc::TimedRobot
     bool button6;
     button6 = joystick.GetRawButton(6);
 
+    bool button4;
+    button4 = joystick.GetRawButton(4);
+
 
   //change speed, spin clockwise or counterclockwise of motors?
   
@@ -160,17 +163,20 @@ if(joystickRotateZAxis<75)
 
 
   //sets camera angle 
+  float servoAngle = 15.0;
   if (button6) 
   {
-    servo.SetAngle(0.0);
+    servoAngle++;
+    servo.SetAngle(servoAngle);
   }
   //sets camera angle
-  else if (button5) 
+  else if (button4) 
   {
-    servo.SetAngle(90.0);
+    servoAngle--; 
+    servo.SetAngle(servoAngle);
   }
   //sets camera angle
-  else
+  else if(button5)
   {
     servo.SetAngle(15.0);
   }
@@ -341,4 +347,4 @@ int main() { return frc::StartRobot<Robot>(); }
              '''''''+''''''###+++##''+###'''''''''''''                 
               '''''''''''''+##'''#:####  #'''''''''+#;                 
               ##+'''''''''#   +#+:        '+######':                   
-                :'########                                     
+                :'######## 
