@@ -25,12 +25,10 @@ class Robot : public frc::TimedRobot
       wpi::errs() << "Vision only available on Linux.\n";
       wpi::errs().flush();
     #endif
-
   }
 
   void TeleopPeriodic()
   {
-    
     //lifts rear wheels with xbox
     bool leftBumper;
     leftBumper = xbox.GetRawButton(5);
@@ -39,7 +37,7 @@ class Robot : public frc::TimedRobot
     bool rightBumper;
     rightBumper = xbox.GetRawButton(6);
 
-    //brings wheels down with x box
+    //brings wheels down with xbox
     double rightTrigger;
     rightTrigger = xbox.GetRawAxis(3);
 
@@ -60,6 +58,8 @@ class Robot : public frc::TimedRobot
     //closes claw with xbox
     bool bButton;
     bButton = xbox.GetRawButton(2);
+    
+    
 
     //controls forward and backward movement of robot with joystick
     bool joystickYAxis;
@@ -69,26 +69,24 @@ class Robot : public frc::TimedRobot
     bool joystickRotateZAxis;
     joystickRotateZAxis = joystick.GetRawAxis(2);
 
-    //controls angle of camera
+    //controls angle of camera with joystick
     bool button5;
     button5 = joystick.GetRawButton(5);
 
-    //controls angle of camera
+    //controls angle of camera with joystick
     bool button6;
     button6 = joystick.GetRawButton(6);
 
-    bool button4;
-    button4 = joystick.GetRawButton(4);
 
 
-  //change speed, spin clockwise or counterclockwise of motors?
-  
+
   //brings wheels down with xbox
     if(rightTrigger>.5)
   {
     frontWheelsMotor.Set(-.5);
     rearWheelsMotor.Set(-.5);
   } 
+  
   //lifts rear wheels with xbox
   if(leftBumper)
   {
@@ -98,6 +96,7 @@ class Robot : public frc::TimedRobot
   {
     rearWheelsMotor.Set(0);
   }
+  
   //lifts front wheels with xbox
   if(rightBumper)
   {
@@ -107,11 +106,13 @@ class Robot : public frc::TimedRobot
   {
     frontWheelsMotor.Set(0);
   }
+  
   //opens claw with xbox
   if(aButton)
   {
     clawMotor.Set(.5);
   }
+  
   //closes claw with xbox
   else if(bButton)
   {
@@ -123,36 +124,41 @@ class Robot : public frc::TimedRobot
   }
 
 
+
+
   //joystick controls could be wrong
   //might change to analog, might need to change the direction, speed
   //leftWheelMotor.Set(joystick.GetY());
   //rightWheelMotor.Set(joystick.GetY());
+  
   //moves the robot forward with push forward of joystick
   if(joystickYAxis>.5)
   {
     leftWheelMotor.Set(.5);
     rightWheelMotor.Set(.5);
   }
+  
   //moves the robot backward with pull backward of joystick
   else if(joystickYAxis<.5)
   {
     leftWheelMotor.Set(-.5);
     rightWheelMotor.Set(-.5);
   }
-  //rotates the robot counterclockwise with joystick's z axis
-
-
-if(joystickRotateZAxis<75)
+  
+ //rotates the robot counterclockwise with joystick's z axis
+  if(joystickRotateZAxis<75)
   {
     leftWheelMotor.Set(.25);
     rightWheelMotor.Set(0);
   }
+  
   //rotates the robot clockwise with joystick's z axis
   else if(joystickRotateZAxis>25)
   {
     leftWheelMotor.Set(0);
     rightWheelMotor.Set(.25);
   }
+  
   //when the joystick is not in use the robot does not move
   else
   {
@@ -162,25 +168,24 @@ if(joystickRotateZAxis<75)
 
 
 
+
   //sets camera angle 
-  float servoAngle = 15.0;
   if (button6) 
   {
-    servoAngle++;
-    servo.SetAngle(servoAngle);
+    servo.SetAngle(0.0);
   }
+  
   //sets camera angle
-  else if (button4) 
+  else if (button5) 
   {
-    servoAngle--; 
-    servo.SetAngle(servoAngle);
+    servo.SetAngle(90.0);
   }
+  
   //sets camera angle
-  else if(button5)
+  else
   {
     servo.SetAngle(15.0);
   }
-
   }
 
  private:
@@ -347,4 +352,4 @@ int main() { return frc::StartRobot<Robot>(); }
              '''''''+''''''###+++##''+###'''''''''''''                 
               '''''''''''''+##'''#:####  #'''''''''+#;                 
               ##+'''''''''#   +#+:        '+######':                   
-                :'######## 
+                :'########                                     
