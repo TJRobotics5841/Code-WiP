@@ -76,7 +76,10 @@ class Robot : public frc::TimedRobot
     //controls angle of camera with joystick
     bool button6;
     button6 = joystick.GetRawButton(6);
-
+    
+    //does same things as last two vars
+    bool button4;
+    button4 = joystick.GetRawButton(4);
 
 
 
@@ -166,23 +169,21 @@ class Robot : public frc::TimedRobot
     rightWheelMotor.Set(0);
   }
 
-
-
-
   //sets camera angle 
+  float servoAngle = 15.0;
   if (button6) 
   {
-    servo.SetAngle(0.0);
+    servoAngle++;
+    servo.SetAngle(servoAngle);
   }
-  
   //sets camera angle
-  else if (button5) 
+  else if (button4) 
   {
-    servo.SetAngle(90.0);
+    servoAngle--; 
+    servo.SetAngle(servoAngle);
   }
-  
   //sets camera angle
-  else
+  else if(button5)
   {
     servo.SetAngle(15.0);
   }
