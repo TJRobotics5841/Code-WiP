@@ -1,6 +1,6 @@
 //Megan Bell
 //Gabe Najera
-//xbox controller to control functions of robot, joystick controller to control movement of robot
+//xbox controller to control functions of robot and camera angle, joystick controller to control movement of robot
 
 #include <frc/XboxController.h>
 #include <frc/Joystick.h>
@@ -13,8 +13,8 @@
 class Robot : public frc::TimedRobot 
 {
  public:
- 
-  void RobotInit()override
+
+  void RobotInit() override
   {
     //camera code may need fixing, go into robot init
     #if defined(__linux__)
@@ -62,11 +62,11 @@ class Robot : public frc::TimedRobot
     
 
     //controls forward and backward movement of robot with joystick
-    bool joystickYAxis;
+    double joystickYAxis;
     joystickYAxis = joystick.GetRawAxis(1);
 
     //controls pivot with joystick
-    bool joystickRotateZAxis;
+    double joystickRotateZAxis;
     joystickRotateZAxis = joystick.GetRawAxis(2);
 
     //controls angle of camera with joystick
@@ -77,7 +77,7 @@ class Robot : public frc::TimedRobot
     bool button6;
     button6 = joystick.GetRawButton(6);
     
-    //does same things as last two vars
+    //contrp;s angle of camera with joystick
     bool button4;
     button4 = joystick.GetRawButton(4);
 
@@ -149,14 +149,14 @@ class Robot : public frc::TimedRobot
   }
   
  //rotates the robot counterclockwise with joystick's z axis
-  if(joystickRotateZAxis<75)
+  if(joystickRotateZAxis>.75)
   {
     leftWheelMotor.Set(.25);
     rightWheelMotor.Set(0);
   }
   
   //rotates the robot clockwise with joystick's z axis
-  else if(joystickRotateZAxis>25)
+  else if(joystickRotateZAxis<.25)
   {
     leftWheelMotor.Set(0);
     rightWheelMotor.Set(.25);
@@ -171,17 +171,20 @@ class Robot : public frc::TimedRobot
 
   //sets camera angle 
   float servoAngle = 15.0;
+
   if (button6) 
   {
     servoAngle++;
     servo.SetAngle(servoAngle);
   }
+
   //sets camera angle
   else if (button4) 
   {
     servoAngle--; 
     servo.SetAngle(servoAngle);
   }
+
   //sets camera angle
   else if(button5)
   {
