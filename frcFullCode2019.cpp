@@ -38,7 +38,7 @@ class Robot : public frc::TimedRobot
     //controlls knuckle/wrist with xbox
     double rightJoystick;
     rightJoystick = xbox.GetRawAxis(5);
-    upAndDownWristMotor.Set(rightJoystick);
+    upAndDownWristMotor.Set(-rightJoystick/2);
 
     //open claw with xbox
     bool aButton;
@@ -66,13 +66,13 @@ class Robot : public frc::TimedRobot
   //opens claw with xbox
   if(aButton)
   {
-    clawMotor.Set(.5);
+    clawMotor.Set(1);
   }
   
   //closes claw with xbox
   else if(bButton)
   {
-    clawMotor.Set(-.5);
+    clawMotor.Set(-1 );
   }
   else
   {
@@ -103,8 +103,8 @@ class Robot : public frc::TimedRobot
   }
 
  private:
-  frc::Joystick joystick{0};
-  frc::XboxController xbox{1};
+  frc::Joystick joystick{1};
+  frc::XboxController xbox{0};
   
   //servo motors not attatched yet
   frc::Servo servo{5};
@@ -123,7 +123,6 @@ class Robot : public frc::TimedRobot
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif
-
 
 //begin the invoking of shag
 
