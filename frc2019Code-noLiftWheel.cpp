@@ -1,6 +1,6 @@
 //Megan Bell
 //Gabe Najera
-//xbox controller to control functions of robot and camera angle, joystick controller to control movement of robot
+//moves robot w/ joystick and controls functions w/ xbox controller
 
 #include <frc/XboxController.h>
 #include <frc/Joystick.h>
@@ -9,6 +9,7 @@
 #include <cameraserver/CameraServer.h>
 #include <frc/Servo.h>
 #include <frc/TimedRobot.h>
+#include <frc/drive/DifferentialDrive.h>
 
 class Robot : public frc::TimedRobot 
 {
@@ -28,7 +29,7 @@ class Robot : public frc::TimedRobot
   }
 
   void TeleopPeriodic()
-  {
+   {
     //controls arm with xbox
     double leftJoystick;
     leftJoystick = xbox.GetRawAxis(1);
@@ -46,17 +47,10 @@ class Robot : public frc::TimedRobot
     //closes claw with xbox
     bool bButton;
     bButton = xbox.GetRawButton(2);
-    
-    
 
-    //controls forward and backward movement of robot with joystick
-    double joystickYAxis;
-    joystickYAxis = joystick.GetRawAxis(1);
-
-    //controls pivot with joystick
-    double joystickRotateZAxis;
-    joystickRotateZAxis = joystick.GetRawAxis(2);
-
+    //moves robot with joystick
+     m_robotDrive.ArcadeDrive(joystick.GetY(), joystick.GetX());
+   
     //controls angle of camera with joystick
     bool button5;
     button5 = joystick.GetRawButton(5);
@@ -65,13 +59,9 @@ class Robot : public frc::TimedRobot
     bool button6;
     button6 = joystick.GetRawButton(6);
     
-    //contrp;s angle of camera with joystick
+    //controls angle of camera with joystick
     bool button4;
     button4 = joystick.GetRawButton(4);
-
-
-
- 
   
   //opens claw with xbox
   if(aButton)
@@ -87,49 +77,6 @@ class Robot : public frc::TimedRobot
   else
   {
     clawMotor.Set(0);
-  }
-
-
-
-
-  //joystick controls could be wrong
-  //might change to analog, might need to change the direction, speed
-  //leftWheelMotor.Set(joystick.GetY());
-  //rightWheelMotor.Set(joystick.GetY());
-  
-  //moves the robot forward with push forward of joystick
-  if(joystickYAxis>.5)
-  {
-    leftWheelMotor.Set(.5);
-    rightWheelMotor.Set(.5);
-  }
-  
-  //moves the robot backward with pull backward of joystick
-  else if(joystickYAxis<.5)
-  {
-    leftWheelMotor.Set(-.5);
-    rightWheelMotor.Set(-.5);
-  }
-  
- //rotates the robot counterclockwise with joystick's z axis
-  if(joystickRotateZAxis>.75)
-  {
-    leftWheelMotor.Set(.25);
-    rightWheelMotor.Set(0);
-  }
-  
-  //rotates the robot clockwise with joystick's z axis
-  else if(joystickRotateZAxis<.25)
-  {
-    leftWheelMotor.Set(0);
-    rightWheelMotor.Set(.25);
-  }
-  
-  //when the joystick is not in use the robot does not move
-  else
-  {
-    leftWheelMotor.Set(0);
-    rightWheelMotor.Set(0);
   }
 
   //sets camera angle 
@@ -170,6 +117,7 @@ class Robot : public frc::TimedRobot
   //drive motor may be switched
   frc::Spark leftWheelMotor{0};
   frc::Spark rightWheelMotor{1};
+  frc::DifferentialDrive m_robotDrive{leftWheelMotor,rightWheelMotor};
 };
 
 #ifndef RUNNING_FRC_TESTS
