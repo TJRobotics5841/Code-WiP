@@ -30,15 +30,15 @@ class Robot : public frc::TimedRobot
 
   void TeleopPeriodic()
    {
-    //controls arm with xbox
+    //controls wrist with xbox
     double leftJoystick;
     leftJoystick = xbox.GetRawAxis(1);
-    upAndDownArmMotor.Set(leftJoystick);
+    upAndDownWristMotor.Set(leftJoystick);
 
-    //controlls knuckle/wrist with xbox
+    //controlls arm with xbox
     double rightJoystick;
     rightJoystick = xbox.GetRawAxis(5);
-    upAndDownWristMotor.Set(-rightJoystick/2);
+    upAndDownArmMotor.Set(-rightJoystick/2);
 
     //open claw with xbox
     bool aButton;
@@ -110,8 +110,8 @@ class Robot : public frc::TimedRobot
   frc::Servo servo{5};
   
   //these may not be correct but they should be
-  frc::Spark upAndDownArmMotor{3};
-  frc::Spark upAndDownWristMotor{2};
+  frc::Spark upAndDownWristMotor{3};
+  frc::Spark upAndDownArmMotor{2};
   frc::Spark clawMotor{4};
   
   //drive motor may be switched
