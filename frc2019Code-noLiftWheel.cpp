@@ -19,8 +19,10 @@ class Robot : public frc::TimedRobot
   {
     //camera code may need fixing, go into robot init
     #if defined(__linux__)
-      cs::UsbCamera videoBoi = frc::CameraServer::GetInstance()->StartAutomaticCapture();
-      videoBoi.SetResolution(720, 1280);
+      
+  // Get the USB camera from CameraServer
+   cs::UsbCamera camera = frc::CameraServer::GetInstance()->StartAutomaticCapture("Camera",0);
+    camera.SetResolution(360, 480);
 
     #else
       wpi::errs() << "Vision only available on Linux.\n";
@@ -40,16 +42,27 @@ class Robot : public frc::TimedRobot
     rightJoystick = xbox.GetRawAxis(5);
     upAndDownArmMotor.Set(-rightJoystick/2);
 
-    //open claw with xbox
-    bool aButton;
-    aButton = xbox.GetRawButton(1);
+    //open and close claw with xbox
+    double rTrigger;
+    rTrigger = xbox.GetTriggerAxis(frc::GenericHID::JoystickHand::kRightHand);
 
-    //closes claw with xbox
-    bool bButton;
-    bButton = xbox.GetRawButton(2);
+    double lTrigger;
+    lTrigger = xbox.GetTriggerAxis(frc::GenericHID::JoystickHand::kLeftHand);
+
+    //LIGHTSPEED ACTIVATE
+    float lightspeed = 1;
+    bool toggle;
+    
+    if (joystick.GetRawButton(3) && toggle == false) {
+      lightspeed = 1.5;
+      toggle = true;
+    } else if (joystick.GetRawButton(3) && toggle == true) {
+      lightspeed = 1;
+      toggle = false;
+    }
 
     //moves robot with joystick
-     m_robotDrive.ArcadeDrive(joystick.GetY(), joystick.GetX());
+     m_robotDrive.ArcadeDrive(joystick.GetY() * lightspeed, joystick.GetX());
    
     //controls angle of camera with joystick
     bool button5;
@@ -62,6 +75,12 @@ class Robot : public frc::TimedRobot
     //controls angle of camera with joystick
     bool button4;
     button4 = joystick.GetRawButton(4);
+
+  //locks motor in place (hopefully)
+  if (rightJoystick == .5)
+   {
+    upAndDownArmMotor.Set(.4);
+   }
   
   //opens claw with xbox
   if(aButton)
@@ -69,14 +88,22 @@ class Robot : public frc::TimedRobot
     clawMotor.Set(1);
   }
   
+  bool closed = false;
+  //opens claw with xbox
+  if(lTrigger < 0.5)
+  {
+    clawMotor.Set(1);
+    closed = false;
+  }
   //closes claw with xbox
-  else if(bButton)
+  else if(rTrigger > - 0.5)
   {
     clawMotor.Set(-1 );
+    closed = true;
   }
-  else
+  else if (closed) 
   {
-    clawMotor.Set(0);
+    clawMotor.Set(0.5);
   }
 
   //sets camera angle 
@@ -123,3 +150,146 @@ class Robot : public frc::TimedRobot
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif
+
+//begin the invoking of shag
+
+/*
+
+                This code invokes the universal power of the godlike being
+                that is Shaggy Rogers. We insert his likeness for his blessing of
+                a robot that fuctions at a higher level than any other. Course though the copper 
+                vessels that line the aluminum frame and distribute your legendary
+                energy. God speed, Shaggy.
+                                                                       
+                                                                       
+                                  '##'                                 
+                               '#+::::;#:                              
+                          ';: #::::::::::#                             
+                            #'::::::::::::#                            
+                            ;+::::'::::;::'                            
+                           #:::::::::::+::#                            
+                           ;::+:::';:::::+                             
+                          #:::''''.:::':;:'                            
+                          #:::;.#:.':,'.::#                            
+                          +:':;.+ ,,' :.::#                            
+                          ::::;. 0..:0:,::''                           
+                         ::'::;.:.|....,::+#                           
+                         ::+':;...|....,:::#                           
+                         :';#;'../......:+:+                           
+                          #:;:'.'\...'..;+:+                           
+                          +:'.#'+.____.+.:':#                           
+                           ::,#.:.....:.;::+                           
+                           #:;#..+'.::..;:#                            
+                            #:'...'.....+#                             
+                             :#.........#                              
+                              #..,...,..#                              
+                               #..;..:;::                              
+                                #:+.;'+;                               
+                                 ++###                                 
+                                 #...'                                 
+                                 #...;                                 
+                                 +...;+;#                              
+                        :::    :#;...,:::                              
+                       #+;;;;'#;:,....:#:#;                            
+                      #;:::::;:'+.....+:'::'#'                         
+                      #:::::::;.......,.#:::::##                       
+                     :;:::::::+.........#:::::::#                      
+                     #::::::::'.........':::::::'                      
+                     ++:::::::#........,:::::::::'                     
+                    +::::::::::,.......#:::::::::+                     
+                   #:::':::::::'......,:::::::::'#                     
+                  #:::::;:::::::+.....+:::::;::::#                     
+                 #::::::;::::::::;,..'::::::'::':'                     
+               :#::::::::+:::::::::#.:::::::::+:::#                    
+               ;:::::::::::::::::::::::::::#:'::::;:                   
+                #::::::::::::::::::::::::::;'::::::#                   
+                '::::::::::::::::::::::::::':::::::;;                  
+                 #:::::::::::::::::::::::::'::::::::#                  
+                 '+##::::::::::::::::::::::'::::::::#                  
+                    #::::::::::::::::::::::+::::::::#                  
+                   ::+:::::::::::::::::::::+::::::;#                   
+                   #.#:::::::::::::::::::::+:::::+                     
+                   #..+::::::::::::::::::::+::::'.'                    
+                  :,..,##+:::::::::::::::::'::::#.#                    
+                  #....# ':::::::::::::::::':::#:.#                    
+                  #....' ':::::::::::::::::####...:                    
+                  :...:  +:::::::::::::::::+  #....'                   
+                 ;....#  +:::::::::::::::::+  #....#                   
+                 #....'  +:::::::::::::::::+  #....+                   
+                 #....#  +:::::::::::::::::+  +....,                   
+                 #....#  #:::::::::::::::::+  :....,                   
+                 #....+  #:::::::::::::::::+ ;.....:                   
+                 '....;  +:::::::::::::::::+ #.....'                   
+                 '....;  +:::::::::::::::::' #.....#                   
+                 ;....'  +:::::::::::::::::' #.....#                   
+                 ;....#  +:::::::::::::::::: #.....#                   
+                 ;....#  #:::::::::::::::::: #.....#                   
+                 ;....#  #:::::::::::::::::  '.....#                   
+                 ;....#  #:::::::::::::::+:  :....,'                   
+                 ;....'  #::::::::::::::;#::  ,...'                    
+                 '...,:  #:::::::::::::#:;:'  ;...#                    
+                 #...'   +::::::::::::#:+::+  '...#                    
+                 #...#   '::::::::::;'::;::#  #...#                    
+                 #...#  :::::::::::#:::#:::#  #...'                    
+                 #...#  ':::::;##+::::#::::#  '...                     
+                 #...#  #::::::::::::+:::::#  '..;                     
+                 +...+  #:::::::::::+::::::#  :..#                     
+                 :...'  #::::::::::+:::::::+  ...#                     
+                  ...'  #:::::::::#::::::::;::...#                     
+                  ,..'  #:::::+:;#::::::::::''...;                     
+                  '..+  '::::#'#;:::::::::::##...                      
+                  #..# :::::::::::::::::::::##..'                      
+                  #..# ;::::::::::::::::::::#,..#                      
+                  '..: '::::::::::::::::::::#...+                      
+                   ...#;:::::::::::::::::;#;....:                      
+                   ,...##;::::::::::::::++.....,                       
+                   ;....#:#':::::::::::#+'.....+                       
+                   '....# #'##+::::::+#'+.+....#                       
+                   ;..... +''''+####+'''+.:....+                       
+                   ,...+.#:+'''''#'''''#.#.....'                       
+                   .... ..'#'''''#''''#.;;.....:                       
+                   ..:. #.##'''''+''''''#+....+                        
+                  :..'.    #'''''+''''''##.:','                        
+                  ',++.#   #'''''+''''''#....`                         
+                  ;.:,..'  ''''''+''''''+.'+'`                         
+                   '..,..:  '''''+''''';.:.,'#                         
+                    +.',.+  +''''+'''':.+...'                          
+                     #.+;.  #''''+'''',,.+.#                           
+                       ++.: #''''+'''+.#.#                             
+                         '  #''''+'''''''                              
+                            #''''+'''''''                              
+                            #''''+''''''':                             
+                            #''''+''''''''                             
+                            '''''''''''''+                             
+                           +'''''''''''''#                             
+                           #'''''''''''''#                             
+                          ;''''''''''''''#                             
+                          #''''''''''''''+                             
+                          #''''''''''''''+                             
+                          #''''''''''''''':                            
+                          #'''''''''''''##:                            
+                           #'''''''''''':                              
+                            '''''''''''''                              
+                           '''''''''''''#                              
+                           #''''''''''''#                              
+                           '''''''+'''''':                             
+                          #'''''''+''''''#                             
+                          #'''''''+''''''+                             
+                         ;''''''''#'''''''+                            
+                         #''''''''#'''''''#                            
+                         #''''''''#''''''''#                           
+                        #'''''''''#''''''''#                           
+                        #'''''''''#'''#'''''#                          
+                       ;''+'''''''#''''+''''#                          
+                       #''''''''''#'''''#''''#                         
+                      :#''''''''''#'''''''#''#                         
+                     ++'''''''''''#'''''''''''                         
+                     '''''''''''''#''''''''''''                        
+              ###':;#++'''''''''''#''''''''+####++++#                  
+             +''''+''''#''''''''''#''''''++'''''''''+                  
+             #'''''+'''''#''''''''##''''#'''+'''''''':                 
+             '''''''+''''''###+++##''+###'''''''''''''                 
+              '''''''''''''+##'''#:####  #'''''''''+#;                 
+              ##+'''''''''#   +#+:        '+######':                   
+                :'########                                     
+*/
