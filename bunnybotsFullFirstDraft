@@ -43,14 +43,14 @@ wpi::errs().flush();
 
 //just move forward some and stop while having intake on
 
-  if (timer.Get() > 4.0){
-    robotDrive.ArcadeDrive(0.3, 0);
-    intake.Set(.5);
+  if (timer.Get() < 4.0){
+    robotDrive.ArcadeDrive(-0.5, 0);
+    intake.Set(-.5);
 
   }
-  else if (timer.Get() > 4.5){
+  else if (timer.Get() < 4.5){
     robotDrive.ArcadeDrive(0,0);
-    intake.Set(.5);
+    intake.Set(-.5);
  
   }
   else{
@@ -61,42 +61,49 @@ wpi::errs().flush();
 }
  
  void TeleopPeriodic() override {
-   robotDrive.ArcadeDrive(joystick.GetY(), joystick.GetX());
- 
+   robotDrive.ArcadeDrive(joystick.GetY(), joystick.GetX()/1.25);
   
  
    //both will be used for input
    double lTrigger = xbox.GetRawAxis(2);
-   bool  lBackButton = xbox.GetRawButton(4);
+   bool  lBackButton = xbox.GetRawButton(5);
  
    //takes in balls with push of button of trigger
    if(lTrigger > .5 || lBackButton) {
-     intake.Set(.5);
-
+     intake.Set(-.75);
+   } else {
+     intake.Set(0);
    }
  
    //both will be used for output
    double rTrigger = xbox.GetRawAxis(3);
-   bool rBackButton = xbox.GetRawButton(5);
+   bool rBackButton = xbox.GetRawButton(6);
  
    //shoots out balls with push of trigger
    if(rTrigger > .5 || rBackButton) {
-     output1.Set(.5);
-     output2.Set(-.5);
+     output1.Set(-.75);
+     output2.Set(.75);
+   } else {
+     output1.Set(0);
+     output2.Set(0);
    }
- 
+  
    //gets the value of distance from something in inches
    double currentDistance = sensor.GetValue()*0.125;
-   std::cout <<currentDistance;
    frc::SmartDashboard::PutNumber("Distance", currentDistance);
  
    //tells the driver if they are in shootinig distance
+   //std::string message
    while (currentDistance < 24){
      if (currentDistance>16){
-         frc::SmartDashboard::PutString("NOTE:" , "You are in key shooting distance");
+        //if (frc::SmartDashboard::GetString("Warn", "If you wish to shoot, back up") || frc::SmartDashboard::GetString("Warn", "" )) {
+          frc::SmartDashboard::PutString("Warn" , "You are in key shooting distance");
+        //}
      }
      if (currentDistance<16){
-       frc::SmartDashboard::PutString("BACK UP!", "If you wish to shoot, back up");
+        //if (frc::SmartDashboard::GetString("Warn", "You are in key shooting distance") || frc::SmartDashboard::GetString("Warn", "" )) {
+          frc::SmartDashboard::PutString("Warn", "If you wish to shoot, back up");
+        //}
      }
    }
  
@@ -109,10 +116,10 @@ private:
  frc::AnalogInput sensor{0};
  
  //will have to be verified after wiring
- frc::PWMVictorSPX lDrive{0};
- frc::PWMVictorSPX rDrive{1};
- frc::PWMVictorSPX intake{2};
- frc::PWMVictorSPX output1{3};
+ frc::PWMVictorSPX lDrive{2};
+ frc::PWMVictorSPX rDrive{3};
+ frc::PWMVictorSPX intake{0};
+ frc::PWMVictorSPX output1{1};
  frc::PWMVictorSPX output2{4};
  frc::DifferentialDrive robotDrive{lDrive, rDrive};
 
@@ -122,3 +129,4 @@ private:
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif
+
