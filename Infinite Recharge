@@ -1,0 +1,153 @@
+//apparently include statements are frowned upon in this establishment!
+#include <frc/Joystick.h>
+#include <frc/PWMVictorSPX.h>
+#include <frc/TimedRobot.h>
+#include <frc/drive/DifferentialDrive.h>
+#include <frc/XboxController.h>
+#include <frc/Timer.h>
+#include <frc/WPIlib.h>
+#include <cameraserver/CameraServer.h>
+#include <frc/AnalogInput.h>
+#include <wpi/raw_ostream.h>
+#include <frc/util/color.h>
+#include "rev/ColorSensorV3.h"
+#include "rev/ColorMatch.h"
+#include <frc/GenericHID.h>
+#include <string.h>
+
+using namespace std;
+
+class Robot : public frc::TimedRobot {
+
+rev::ColorSensorV3 colorSensor{frc::I2C::Port::kOnboard};
+
+  void moveToColor(string colorNeeded) {
+    string c = colorNeeded;
+    string color = currentColor();
+    while (color != c){
+      spinner.Set(.1);
+    }
+    //this may be unnecessary idk
+    while(color == c){
+      spinner.Set(0);
+    }
+  }
+
+  string currentColor(){
+    frc::Color detectedColor = colorSensor.GetColor();
+    if(detectedColor.red > 0.5){
+      return "RED";
+    } else if (detectedColor.green > 0.5 && detectedColor.blue > 0.2){
+      return "GREEN";
+    } else if ( detectedColor.blue > 0.2){
+      return "BLUE";
+    } else if (detectedColor.red > 0.3 && detectedColor.green > 0.5){
+      return "YELLOW";
+    } else {
+      return "No color detected";
+    }
+  }
+
+public:
+   
+  void RobotInit() {
+
+    // Get the USB camera from CameraServer
+    frc::CameraServer::GetInstance()->StartAutomaticCapture("Front_Cam",0);
+
+  }
+
+  void AutonomousInit(){
+
+  }
+
+  void AutonomousPeriodic(){
+    
+  }
+  
+  void TeleopPeriodic() {
+    // Drive with arcade style
+    frc::Color detectedColor = colorSensor.GetColor();
+    drive.ArcadeDrive(dXbox.GetY(frc::GenericHID::JoystickHand::kLeftHand), dXbox.GetX(frc::GenericHID::JoystickHand::kRightHand));
+
+    //begin the spinny boy
+    //auto color = currentColor();
+    //rotationControl(color);
+  
+    //intake
+    if (fXbox.GetTriggerAxis(frc::GenericHID::JoystickHand::kLeftHand) > 0.2 || fXbox.GetBumper(frc::GenericHID::JoystickHand::kLeftHand)) {
+      intake.Set(0.5);
+    } else {
+      intake.Set(0);
+    }
+
+  //output
+    if (fXbox.GetBumper(frc::GenericHID::JoystickHand::kRightHand)){
+      output1.Set(0.5);
+      output2.Set(-0.5);
+    } else if (fXbox.GetTriggerAxis(frc::GenericHID::JoystickHand::kRightHand) > 0.2 ){
+      output1.Set(1);
+      output2.Set(-1);
+    } else{
+      output1.Set(0);
+      output2.Set(0);
+    }
+
+  //lift
+    //stage 1
+    if (dXbox.GetBumper(frc::GenericHID::JoystickHand::kLeftHand)){
+      liftStage1.Set(-1);
+    } else if(dXbox.GetTriggerAxis(frc::GenericHID::JoystickHand::kLeftHand) > 0.2){
+      liftStage1.Set(1);
+    } else{
+      liftStage1.Set(0);
+    }
+    //stage 2
+    if (dXbox.GetBumper(frc::GenericHID::JoystickHand::kRightHand) || dXbox.GetTriggerAxis(frc::GenericHID::JoystickHand::kRightHand) > 0.2){
+      lift1Stage2.Set(1);
+      lift2Stage2.Set(1);
+    } else{
+      lift1Stage2.Set(0);
+      lift2Stage2.Set(0);
+    }
+    
+  //spinner to color
+  //NEED TO TEST IF IT WORKS
+    if (fXbox.GetRawButton(1)) {
+        moveToColor("GREEN");
+    } else if (fXbox.GetRawButton(2)){
+        moveToColor("RED");
+    } else if (fXbox.GetRawButton(3)){
+        moveToColor("BLUE");
+    } else if (fXbox.GetRawButton(4)){
+        moveToColor("YELLOW");
+    }
+
+  //spinner rotation 
+    // -1 is the status of the d-pad when nothing is pressed
+    if (fXbox.GetPOV(0) != -1 ){
+      spinner.Set(1);
+    }
+  }
+  
+private: 
+  frc::XboxController fXbox{0}; 
+  frc::XboxController dXbox{1};
+
+  frc::PWMVictorSPX rDrive{2};
+  frc::PWMVictorSPX lDrive{3};
+  frc::DifferentialDrive drive{lDrive, rDrive}; 
+  frc::PWMVictorSPX intake{0};
+  frc::PWMVictorSPX output1{1};
+  frc::PWMVictorSPX output2{4};
+  frc::PWMVictorSPX liftStage1{5};
+  frc::PWMVictorSPX lift1Stage2{6};
+  frc::PWMVictorSPX lift2Stage2{7};
+  frc::PWMVictorSPX spinner{8};
+
+  frc::Timer timer;
+};
+
+#ifndef RUNNING_FRC_TESTS
+int main() { return frc::StartRobot<Robot>(); }
+#endif
