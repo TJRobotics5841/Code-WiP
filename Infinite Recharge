@@ -14,6 +14,8 @@
 #include "rev/ColorMatch.h"
 #include <frc/GenericHID.h>
 #include <string.h>
+#include <frc/Spark.h>
+
 
 using namespace std;
 
@@ -24,15 +26,15 @@ rev::ColorSensorV3 colorSensor{frc::I2C::Port::kOnboard};
   void moveToColor(string colorNeeded) {
     string c = colorNeeded;
     string color = currentColor();
-    while (color != c){
+    while (color.compare(c) != 0){
       spinner.Set(.1);
     }
-    //this may be unnecessary idk
-    while(color == c){
+    
+    while(color.compare(c) == 0){
       spinner.Set(0);
     }
   }
-
+  
   string currentColor(){
     frc::Color detectedColor = colorSensor.GetColor();
     if(detectedColor.red > 0.5){
@@ -47,7 +49,7 @@ rev::ColorSensorV3 colorSensor{frc::I2C::Port::kOnboard};
       return "No color detected";
     }
   }
-
+  
 public:
    
   void RobotInit() {
@@ -66,10 +68,12 @@ public:
   }
   
   void TeleopPeriodic() {
-    // Drive with arcade style
+    //what is this used for, already a local variable detectedColor in currentColor method
     frc::Color detectedColor = colorSensor.GetColor();
-    drive.ArcadeDrive(dXbox.GetY(frc::GenericHID::JoystickHand::kLeftHand), dXbox.GetX(frc::GenericHID::JoystickHand::kRightHand));
 
+        // Drive with arcade style
+    drive.ArcadeDrive(dXbox.GetY(frc::GenericHID::JoystickHand::kLeftHand), dXbox.GetX(frc::GenericHID::JoystickHand::kRightHand));
+    
     //begin the spinny boy
     //auto color = currentColor();
     //rotationControl(color);
@@ -113,6 +117,7 @@ public:
     
   //spinner to color
   //NEED TO TEST IF IT WORKS
+  /*
     if (fXbox.GetRawButton(1)) {
         moveToColor("GREEN");
     } else if (fXbox.GetRawButton(2)){
@@ -122,7 +127,7 @@ public:
     } else if (fXbox.GetRawButton(4)){
         moveToColor("YELLOW");
     }
-
+  */
   //spinner rotation 
     // -1 is the status of the d-pad when nothing is pressed
     if (fXbox.GetPOV(0) != -1 ){
@@ -134,16 +139,16 @@ private:
   frc::XboxController fXbox{0}; 
   frc::XboxController dXbox{1};
 
-  frc::PWMVictorSPX rDrive{2};
-  frc::PWMVictorSPX lDrive{3};
+  frc::Spark rDrive{6};
+  frc::PWMVictorSPX lDrive{0};
   frc::DifferentialDrive drive{lDrive, rDrive}; 
-  frc::PWMVictorSPX intake{0};
-  frc::PWMVictorSPX output1{1};
-  frc::PWMVictorSPX output2{4};
-  frc::PWMVictorSPX liftStage1{5};
-  frc::PWMVictorSPX lift1Stage2{6};
-  frc::PWMVictorSPX lift2Stage2{7};
-  frc::PWMVictorSPX spinner{8};
+  frc::Spark intake{5};
+  frc::PWMVictorSPX output1{2};
+  frc::PWMVictorSPX output2{3};
+  frc::PWMVictorSPX liftStage1{1};
+  frc::PWMVictorSPX lift1Stage2{7};
+  frc::PWMVictorSPX lift2Stage2{8};
+  frc::PWMVictorSPX spinner{4};
 
   frc::Timer timer;
 };
