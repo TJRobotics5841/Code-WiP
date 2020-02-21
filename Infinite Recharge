@@ -72,7 +72,7 @@ public:
     frc::Color detectedColor = colorSensor.GetColor();
 
         // Drive with arcade style
-    drive.ArcadeDrive(dXbox.GetY(frc::GenericHID::JoystickHand::kLeftHand), dXbox.GetX(frc::GenericHID::JoystickHand::kRightHand));
+    drive.ArcadeDrive(dXbox.GetY(frc::GenericHID::JoystickHand::kLeftHand)/1.25, dXbox.GetX(frc::GenericHID::JoystickHand::kRightHand)/1.25);
     
     //begin the spinny boy
     //auto color = currentColor();
@@ -80,7 +80,7 @@ public:
   
     //intake
     if (fXbox.GetTriggerAxis(frc::GenericHID::JoystickHand::kLeftHand) > 0.2 || fXbox.GetBumper(frc::GenericHID::JoystickHand::kLeftHand)) {
-      intake.Set(0.5);
+      intake.Set(-0.5);
     } else {
       intake.Set(0);
     }
@@ -88,10 +88,10 @@ public:
   //output
     if (fXbox.GetBumper(frc::GenericHID::JoystickHand::kRightHand)){
       output1.Set(0.5);
-      output2.Set(-0.5);
+      output2.Set(0.5);
     } else if (fXbox.GetTriggerAxis(frc::GenericHID::JoystickHand::kRightHand) > 0.2 ){
       output1.Set(1);
-      output2.Set(-1);
+      output2.Set(1);
     } else{
       output1.Set(0);
       output2.Set(0);
@@ -139,15 +139,15 @@ private:
   frc::XboxController fXbox{0}; 
   frc::XboxController dXbox{1};
 
-  frc::Spark rDrive{6};
+  frc::Spark rDrive{5};
   frc::PWMVictorSPX lDrive{0};
   frc::DifferentialDrive drive{lDrive, rDrive}; 
-  frc::Spark intake{5};
+  frc::Spark intake{8};
   frc::PWMVictorSPX output1{2};
   frc::PWMVictorSPX output2{3};
   frc::PWMVictorSPX liftStage1{1};
   frc::PWMVictorSPX lift1Stage2{7};
-  frc::PWMVictorSPX lift2Stage2{8};
+  frc::PWMVictorSPX lift2Stage2{6};
   frc::PWMVictorSPX spinner{4};
 
   frc::Timer timer;
