@@ -104,19 +104,26 @@ public:
     if (dXbox.GetBumper(frc::GenericHID::JoystickHand::kLeftHand)){
       liftStage1.Set(-1);
       //activate le ratchet
-      ratchet.Set(1);
+      ratchet.Set(180);
     } else if(dXbox.GetTriggerAxis(frc::GenericHID::JoystickHand::kLeftHand) > 0.2){
       liftStage1.Set(1);
-      ratchet.Set(0);
+      ratchet.SetAngle(90);
     } else{
       liftStage1.Set(0);
-      ratchet.Set(0);
+      ratchet.SetAngle(90);
     }
+
+    //ratchet override
+    //if ()
+
     //stage 2
-    if (dXbox.GetBumper(frc::GenericHID::JoystickHand::kRightHand) || dXbox.GetTriggerAxis(frc::GenericHID::JoystickHand::kRightHand) > 0.2){
+    if (dXbox.GetBumper(frc::GenericHID::JoystickHand::kRightHand)){
       lift1Stage2.Set(1);
       lift2Stage2.Set(1);
-    } else{
+    } else if (dXbox.GetTriggerAxis(frc::GenericHID::JoystickHand::kRightHand) > 0.2){
+      lift1Stage2.Set(-1);
+      lift2Stage2.Set(-1);
+    } else {
       lift1Stage2.Set(0);
       lift2Stage2.Set(0);
     }
@@ -158,9 +165,9 @@ private:
   frc::PWMVictorSPX intake{8};
   frc::PWMVictorSPX output1{2};
   frc::PWMVictorSPX output2{3};
-  frc::PWMVictorSPX liftStage1{1};
-  frc::PWMVictorSPX lift1Stage2{7};
-  rev::SparkMax lift2Stage2{6};
+  rev::SparkMax liftStage1{6};
+  frc::PWMVictorSPX lift1Stage2{1};
+  frc::PWMVictorSPX lift2Stage2{7};
   frc::PWMVictorSPX spinner{4};
   frc::DoubleSolenoid aim{0,1};
   frc::Servo ratchet{9};
