@@ -25,6 +25,7 @@ class Robot : public frc::TimedRobot {
 
 rev::ColorSensorV3 colorSensor{frc::I2C::Port::kOnboard};
 
+
   void moveToColor(string colorNeeded) {
     string c = colorNeeded;
     string color = currentColor();
@@ -58,6 +59,7 @@ public:
 
     // Get the USB camera from CameraServer
     frc::CameraServer::GetInstance()->StartAutomaticCapture("Front_Cam",0);
+    frc::CameraServer::GetInstance()->StartAutomaticCapture("Back_Cam",1);
 
   }
 
@@ -102,15 +104,12 @@ public:
   //lift
     //stage 1
     if (dXbox.GetBumper(frc::GenericHID::JoystickHand::kLeftHand)){
-      liftStage1.Set(-1);
-      //activate le ratchet
-      ratchet.Set(180);
+      liftStage1.Set(-0.2);
     } else if(dXbox.GetTriggerAxis(frc::GenericHID::JoystickHand::kLeftHand) > 0.2){
       liftStage1.Set(1);
       ratchet.SetAngle(90);
     } else{
       liftStage1.Set(0);
-      ratchet.SetAngle(90);
     }
 
     //ratchet override
@@ -120,20 +119,41 @@ public:
     if (dXbox.GetBumper(frc::GenericHID::JoystickHand::kRightHand)){
       lift1Stage2.Set(1);
       lift2Stage2.Set(1);
+      //ratchet.SetAngle(0);
     } else if (dXbox.GetTriggerAxis(frc::GenericHID::JoystickHand::kRightHand) > 0.2){
       lift1Stage2.Set(-1);
       lift2Stage2.Set(-1);
+      //ratchet.Set(90);
     } else {
       lift1Stage2.Set(0);
       lift2Stage2.Set(0);
+      //ratchet.SetAngle(0);
     }
     
+    bool toggle = false;
+    if (toggle == false && dXbox.GetRawButton(2) == true) {
+      ratchet.SetAngle(90);
+      toggle = true;
+    } else if (toggle == true && dXbox.GetRawButton(2) == true) {
+      ratchet.SetAngle(0);
+      toggle = false;
+    }
+
     //begin le aim
     if (fXbox.GetY(frc::GenericHID::JoystickHand::kRightHand) > 0.3) {
       aim.Set(frc::DoubleSolenoid::kForward);
     } else if (fXbox.GetY(frc::GenericHID::JoystickHand::kRightHand) < -0.3) {
       aim.Set(frc::DoubleSolenoid::kReverse);
     } 
+
+    if (dXbox.GetRawButton(7)){
+      //ratchet.SetAngle(90);
+    }else if(dXbox.GetRawButton(8)){
+      //ratchet.SetAngle(0);
+    }
+    else{
+      ratchet.SetAngle(0);
+    }
 
 
   //spinner to color
@@ -154,18 +174,22 @@ public:
     if (fXbox.GetPOV(0) != -1 ){
       spinner.Set(1);
     }
+
   }
+
+
   
 private: 
   frc::XboxController fXbox{0}; 
   frc::XboxController dXbox{1};
+
   frc::PWMVictorSPX rDrive{5};
   frc::PWMVictorSPX lDrive{0};
   frc::DifferentialDrive drive{lDrive, rDrive}; 
   frc::PWMVictorSPX intake{8};
   frc::PWMVictorSPX output1{2};
   frc::PWMVictorSPX output2{3};
-  rev::SparkMax liftStage1{6};
+  frc::Spark liftStage1{6};
   frc::PWMVictorSPX lift1Stage2{1};
   frc::PWMVictorSPX lift2Stage2{7};
   frc::PWMVictorSPX spinner{4};
