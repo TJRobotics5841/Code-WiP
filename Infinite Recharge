@@ -10,9 +10,9 @@
 #include <frc/AnalogInput.h>
 #include <wpi/raw_ostream.h>
 #include <frc/util/color.h>
-#include "rev/ColorSensorV3.h"
-#include "rev/ColorMatch.h"
-#include "rev/SparkMax.h"
+//#include "rev/ColorSensorV3.h"
+//#include "rev/ColorMatch.h"
+//#include "rev/SparkMax.h"
 #include <frc/GenericHID.h>
 #include <string.h>
 #include <frc/Spark.h>
@@ -25,9 +25,9 @@ using namespace std;
 
 class Robot : public frc::TimedRobot {
 
-rev::ColorSensorV3 colorSensor{frc::I2C::Port::kOnboard};
+//rev::ColorSensorV3 colorSensor{frc::I2C::Port::kOnboard};
 
-  const double voltageScaleConst = 4.883;
+  //const double voltageScaleConst = 4.883;
 
   /*
   double getDistance() {
@@ -42,7 +42,7 @@ rev::ColorSensorV3 colorSensor{frc::I2C::Port::kOnboard};
     return distInch;
   }
 
-  
+  /*
   string currentColor(){
     frc::Color detectedColor = colorSensor.GetColor();
     if(detectedColor.red > 0.5){
@@ -57,7 +57,7 @@ rev::ColorSensorV3 colorSensor{frc::I2C::Port::kOnboard};
       return "No color detected";
     }
   }
-  
+  */
 public:
    
   void RobotInit() {
@@ -65,22 +65,26 @@ public:
     // Get the USB camera from CameraServer
     frc::CameraServer::GetInstance()->StartAutomaticCapture("Front_Cam",0);
     frc::CameraServer::GetInstance()->StartAutomaticCapture("Back_Cam",1);
-    frc::SmartDashboard::PutString("Color", currentColor());
+    //frc::SmartDashboard::PutString("Color", currentColor());
   }
 
   void AutonomousInit(){
-
+      timer.Reset();
+      timer.Start();
   }
 
   void AutonomousPeriodic(){
-    
+    if (timer.Get() < 2) {
+      lDrive.Set(.3);
+      rDrive.Set(-.3); 
+    }
   }
   
   void TeleopPeriodic() {
     //what is this used for, already a local variable detectedColor in currentColor method
-    frc::Color detectedColor = colorSensor.GetColor();
+    //frc::Color detectedColor = colorSensor.GetColor();
 
-        // Drive with arcade style
+    // Drive with arcade style
     drive.ArcadeDrive(dXbox.GetY(frc::GenericHID::JoystickHand::kLeftHand), dXbox.GetX(frc::GenericHID::JoystickHand::kRightHand));
     
     
@@ -143,7 +147,7 @@ public:
       toggle = false;
     }*/
 
-    //begin le aim
+    //aim output
     if (fXbox.GetY(frc::GenericHID::JoystickHand::kRightHand) > 0.3) {
       aim.Set(frc::DoubleSolenoid::kForward);
     } else if (fXbox.GetY(frc::GenericHID::JoystickHand::kRightHand) < -0.3) {
@@ -165,7 +169,7 @@ public:
       ratchet.SetAngle(0);
     }*/
 
-    frc::SmartDashboard::PutNumber("woo", getDistanceInInches());
+    frc::SmartDashboard::PutNumber("Proximity", getDistanceInInches());
 
   //spinner rotation 
     // -1 is the status of the d-pad when nothing is pressed
