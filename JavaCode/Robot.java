@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import java.lang.Math;
-import frc.robot.Subsystem;
+import frc.robot.LiftMech;
 
 public class Robot extends TimedRobot {
   private final PWMVictorSPX m_leftMotor = new PWMVictorSPX(5);
@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
   //private final PWMVictorSPX lift2Stage2 = new PWMVictorSPX(7);
   private final DoubleSolenoid outputSolenoid = new DoubleSolenoid(0, 1);
   //private final DoubleSolenoid liftLock = new DoubleSolenoid(2, 3);
-  private final Subsystem Lift = new Subsystem();
+  private final LiftMech Lift = new LiftMech();
 
   private Timer timer = new Timer();
 
