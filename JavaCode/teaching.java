@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import frc.robot.subsystem;
+import frc.robot.Subsystem;
 import frc.robot.subsystemOutput;
 
 /**
@@ -23,9 +23,9 @@ public class Robot extends TimedRobot {
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
   //private final Joystick m_stick = new Joystick(0);
   private final XboxController xbox = new XboxController(0);
-  private final subsystem inputmotor = new subsystem();
-  private final subsystemOutput outputMotorL = new subsystemOutput();
-  private final subsystemOutput outputMotorR = new subsystemOutput();
+  private final Subsystem inputmotor = new Subsystem();
+  private final subsystemOutput outputMotor = new subsystemOutput();
+  //private final subsystemOutput outputMotorR = new subsystemOutput();
 
   @Override
   public void teleopPeriodic() {
@@ -44,16 +44,17 @@ public class Robot extends TimedRobot {
     }
 
     if(triggerOutputMotorLeft > 0.2) {
-      outputMotorL.outputMotorLeft();
+      outputMotor.outputMotorLeft();
     } else if (triggerOutputMotorLeft < 0.2) {
-      outputMotorL.stopOutputMotorLeft();
+      outputMotor.stopOutputMotorLeft();
     }
 
     if(triggerOutputMotorRight > 0.2) {
-      outputMotorR.outputMotorRight();
+      outputMotor.outputMotorRight();
     } else if (triggerOutputMotorRight < 0.2) {
-      outputMotorR.stopOutputMotorRight();
+      outputMotor.stopOutputMotorRight();
     }
   }
 }
+
 
