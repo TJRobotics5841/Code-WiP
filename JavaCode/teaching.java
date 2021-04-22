@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import frc.robot.subsystem;
+import frc.robot.subsystemOutput;
 
 /**
  * This is a demo program showing the use of the DifferentialDrive class. Runs the motors with
@@ -21,10 +23,9 @@ public class Robot extends TimedRobot {
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
   //private final Joystick m_stick = new Joystick(0);
   private final XboxController xbox = new XboxController(0);
-  private final PWMVictorSPX intakeMotor = new PWMVictorSPX(0);
-  private final PWMVictorSPX outputMotorLeft = new PWMVictorSPX(1);
-  private final PWMVictorSPX outputMotorRight = new PWMVictorSPX(4);
-
+  private final subsystem inputmotor = new subsystem();
+  private final subsystemOutput outputMotorL = new subsystemOutput();
+  private final subsystemOutput outputMotorR = new subsystemOutput();
 
   @Override
   public void teleopPeriodic() {
@@ -32,20 +33,27 @@ public class Robot extends TimedRobot {
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
     m_robotDrive.arcadeDrive(xbox.getY(Hand.kRight), xbox.getX(Hand.kLeft));
-    if(xbox.getTriggerAxis(Hand.kLeft) > 0.20) {
-      intakeMotor.set(-0.75);
-    } else if(xbox.getTriggerAxis(Hand.kLeft) < .20) {
-      intakeMotor.set(0);
+    double triggerInput = xbox.getTriggerAxis(Hand.kLeft);
+    double triggerOutputMotorLeft = xbox.getTriggerAxis(Hand.kRight);
+    double triggerOutputMotorRight = xbox.getTriggerAxis(Hand.kRight);
+
+    if (triggerInput > 0.2) {
+      inputmotor.input();
+    } else if (triggerInput < 0.2) {
+      inputmotor.stopInput();
     }
-    if(xbox.getTriggerAxis(Hand.kRight) > 0.20) {
-      outputMotorLeft.set(-0.75);
-    } else if(xbox.getTriggerAxis(Hand.kLeft) < 0.20) {
-      outputMotorLeft.set(0);
+
+    if(triggerOutputMotorLeft > 0.2) {
+      outputMotorL.outputMotorLeft();
+    } else if (triggerOutputMotorLeft < 0.2) {
+      outputMotorL.stopOutputMotorLeft();
     }
-    if(xbox.getTriggerAxis(Hand.kRight) > 0.20) {
-      outputMotorRight.set(0.75);
-    } else if(xbox.getTriggerAxis(Hand.kLeft) < 0.20) {
-      outputMotorRight.set(0);
+
+    if(triggerOutputMotorRight > 0.2) {
+      outputMotorR.outputMotorRight();
+    } else if (triggerOutputMotorRight < 0.2) {
+      outputMotorR.stopOutputMotorRight();
     }
   }
 }
+
